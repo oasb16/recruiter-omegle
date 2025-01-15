@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Job Seeker Map</h1>
+<div id="map-container"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+<script>
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById('map-container'), {
+            center: { lat: 37.7749, lng: -122.4194 }, // San Francisco
+            zoom: 10,
+        });
+
+        // Example: Adding markers for job seekers
+        const jobSeekers = [
+            { lat: 37.7749, lng: -122.4194, name: 'John Doe' },
+            { lat: 37.7849, lng: -122.4094, name: 'Jane Smith' },
+        ];
+
+        jobSeekers.forEach(seeker => {
+            const marker = new google.maps.Marker({
+                position: { lat: seeker.lat, lng: seeker.lng },
+                map: map,
+                title: seeker.name,
+            });
+
+            const infoWindow = new google.maps.InfoWindow({
+                content: `<p>${seeker.name}</p>`,
+            });
+
+            marker.addListener('click', () => {
+                infoWindow.open(map, marker);
+            });
+        });
+    }
+</script>
+
+<style>
+    #map-container {
+        width: 100%;
+        height: 500px;
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
