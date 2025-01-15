@@ -18,3 +18,7 @@ def chat():
 def submit():
     # Handle form submissions (e.g., user profile creation)
     pass
+
+@app.route('/video_chat')
+def video_chat():
+    return render_template('video_chat.html')

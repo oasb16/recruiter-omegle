@@ -3,35 +3,25 @@
 <h1>Chat Interface</h1>
 <div id="chat-container">
     <div id="chat-box">
-        <!-- Messages will appear here -->
+        <!-- Chat messages will appear here -->
     </div>
-    <form id="chat-form" action="/send_message" method="post">
-        <input type="text" name="message" id="message" placeholder="Type your message..." required>
-        <button type="submit">Send</button>
+    <div id="video-chat">
+        <video id="localVideo" autoplay muted></video>
+        <video id="remoteVideo" autoplay></video>
+    </div>
+    <form id="chat-form" action="#">
+        <input type="text" id="message" placeholder="Type your message..." required>
+        <button type="button" id="sendMessage">Send</button>
+        <button type="button" id="startVideo">Start Video</button>
     </form>
 </div>
 
-<script>
-    // Example JavaScript for real-time chat functionality
-    const form = document.getElementById('chat-form');
-    const chatBox = document.getElementById('chat-box');
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const message = document.getElementById('message').value;
-        const messageDiv = document.createElement('div');
-        messageDiv.textContent = `You: ${message}`;
-        chatBox.appendChild(messageDiv);
-        document.getElementById('message').value = '';
-    });
-</script>
-
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
 <style>
     #chat-container {
         width: 80%;
         margin: auto;
         margin-top: 20px;
-        border: 1px solid #ddd;
         padding: 10px;
     }
     #chat-box {
@@ -39,17 +29,24 @@
         overflow-y: scroll;
         border: 1px solid #ccc;
         padding: 10px;
+        margin-bottom: 10px;
+    }
+    #video-chat {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 10px;
+    }
+    video {
+        width: 45%;
+        border: 1px solid #000;
     }
     #chat-form {
         display: flex;
-        margin-top: 10px;
+        justify-content: space-between;
     }
     #message {
         flex: 1;
         padding: 5px;
-    }
-    button {
-        padding: 5px 10px;
     }
 </style>
 {% endblock %}
