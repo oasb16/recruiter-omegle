@@ -4,15 +4,13 @@ let liked = [];
 let disliked = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-    const recruiterBtn = document.getElementById("recruiter-btn");
-    const jobseekerBtn = document.getElementById("jobseeker-btn");
-
-    recruiterBtn.addEventListener("click", () => fetchCards("recruiter"));
-    jobseekerBtn.addEventListener("click", () => fetchCards("jobseeker"));
+    // Detect role from localStorage
+    const role = localStorage.getItem('role') || 'jobseeker';
+    fetchCards(role);
 });
 
 function fetchCards(role) {
-    // Reset cards and sections when a new role is selected
+    // Reset cards and sections when fetching new data
     currentIndex = 0;
     cards = [];
     liked = [];

@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RecruiterOmegle</title>
+    <title>Recruiter Omegle</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <nav>
-        <a href="/">Home</a>
-        <a href="/map">Map</a>
-        <a href="/swipe">Swiping</a>
-        <a href="/video_chat">Video Chat</a>
-        <a href="/chat">Chat</a>
-        <a href="/dashboard">Dashboard</a>
+        <div class="navbar">
+            <h1><a href="/" class="navbar-title">Recruiter Omegle</a></h1>
+            <div class="toggle-container">
+                <label for="role-toggle">--></label>
+                <input type="checkbox" id="role-toggle" />
+                <label for="role-toggle">Click here if you are recruiter</label>
+            </div>
+        </div>
     </nav>
     <main>
         {% block content %}{% endblock %}
     </main>
+    <script>
+        // Initialize toggle state from localStorage
+        const roleToggle = document.getElementById('role-toggle');
+        roleToggle.checked = localStorage.getItem('role') === 'recruiter';
+
+        // Update role in localStorage when toggled
+        roleToggle.addEventListener('change', () => {
+            localStorage.setItem('role', roleToggle.checked ? 'recruiter' : 'jobseeker');
+            location.reload(); // Reload to apply the new role
+        });
+    </script>
 </body>
 </html>
