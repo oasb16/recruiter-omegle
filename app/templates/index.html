@@ -1,6 +1,58 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Welcome to Recruiter Omegle</h1>
-<a href="/map">View Map</a>
-<a href="/chat">Start Chat</a>
+<h1>Welcome to RecruiterOmegle</h1>
+<p>Connect jobseekers and recruiters with real-time communication and smart matchmaking.</p>
+
+<div class="feature-section">
+    <!-- Map Feature -->
+    <h2>Interactive Map</h2>
+    <p>Explore nearby jobseekers and recruiters on an interactive map.</p>
+    <a href="/map" class="btn">View Map</a>
+</div>
+
+<div class="feature-section">
+    <!-- Swiping Cards Feature -->
+    <h2>Tinder-Style Swiping</h2>
+    <p>Swipe through profiles of jobseekers or job postings tailored to your preferences.</p>
+    <a href="/swipe" class="btn">Start Swiping</a>
+</div>
+
+<div class="feature-section">
+    <!-- Real-Time Video Chat -->
+    <h2>Video Chat</h2>
+    <p>Engage in real-time video calls between jobseekers and recruiters for interviews.</p>
+    <a href="/video_chat" class="btn">Start Video Chat</a>
+</div>
+
+<div class="feature-section">
+    <!-- Real-Time Chat -->
+    <h2>Text Chat</h2>
+    <p>Chat instantly with jobseekers or recruiters to discuss opportunities.</p>
+    <a href="/chat" class="btn">Start Chatting</a>
+</div>
+
+<div class="feature-section">
+    <!-- Admin Dashboard -->
+    <h2>Admin Dashboard</h2>
+    <p>Monitor and scale the system resources to manage traffic effectively.</p>
+    <a href="/dashboard" class="btn">Go to Dashboard</a>
+</div>
+
+<style>
+    .feature-section {
+        margin-bottom: 20px;
+    }
+    .btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        color: white;
+        background-color: #007bff;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
 {% endblock %}
