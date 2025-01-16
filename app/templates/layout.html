@@ -1,37 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Recruiter Omegle</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecruiterOmegle</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <nav>
         <a href="/">Home</a>
         <a href="/map">Map</a>
-        <a href="/chat">Text Chat</a>
+        <a href="/swipe">Swiping</a>
         <a href="/video_chat">Video Chat</a>
+        <a href="/chat">Chat</a>
+        <a href="/dashboard">Dashboard</a>
     </nav>
-    <style>
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #ddd;
-        }
-        nav a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-    </style>
-    
-    <div class="container">
+    <main>
         {% block content %}{% endblock %}
-    </div>
+    </main>
 </body>
 </html>
