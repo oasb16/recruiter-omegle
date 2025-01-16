@@ -15,14 +15,14 @@ def swipe_cards():
     # Mock response (replace with database query)
     return jsonify([{"id": user.id, "name": user.name, "role": user.role} for user in cards])
 
-@app.route('/swipe_action', methods=['POST'])
-def swipe_action():
-    data = request.json
-    match = Match(
-        recruiter_id=data['recruiter_id'],
-        jobseeker_id=data['jobseeker_id'],
-        status=data['action']  # liked or disliked
-    )
-    db.session.add(match)
-    db.session.commit()
-    return jsonify({"message": "Swipe action recorded"})
+# @app.route('/swipe_action', methods=['POST'])
+# def swipe_action():
+#     data = request.json
+#     match = Match(
+#         recruiter_id=data['recruiter_id'],
+#         jobseeker_id=data['jobseeker_id'],
+#         status=data['action']  # liked or disliked
+#     )
+#     db.session.add(match)
+#     db.session.commit()
+#     return jsonify({"message": "Swipe action recorded"})
