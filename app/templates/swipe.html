@@ -1,15 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Swipe Cards</h1>
-<div id="card-container"></div>
+<h1>Swipe Profiles</h1>
 <div>
-    <button onclick="swipe('like')">👍 Like</button>
-    <button onclick="swipe('dislike')">👎 Dislike</button>
+    <button id="recruiter-btn">Recruiter</button>
+    <button id="jobseeker-btn">Jobseeker</button>
 </div>
-<script src="{{ url_for('static', filename='swipe.js') }}"></script>
-<script>
-    const role = "{{ user.role if user else 'guest' }}";
-    fetchCards(role);
-</script>
 
+<div id="card-container" style="margin-top: 20px;"></div>
+
+<script src="{{ url_for('static', filename='swipe.js') }}"></script>
 {% endblock %}
