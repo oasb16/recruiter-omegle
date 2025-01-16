@@ -2,10 +2,16 @@ from flask import request, jsonify, render_template
 from app import app, db
 from app.models import User, Match
 import subprocess
+from flask_login import current_user
 
-@app.route('/')
+@app.route('/layout')
 def home():
     return render_template('layout.html')
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 
 @app.route('/map')
 def map():
@@ -21,7 +27,9 @@ def video_chat():
 
 @app.route('/swipe')
 def swipe():
-    return render_template('swipe.html')
+    # Ensure user context is passed
+    user = current_user if current_user.is_authenticated else None
+    return render_template('swipe.html', user=user)
 
 @app.route('/map_data', methods=['GET'])
 def map_data():
@@ -30,9 +38,3 @@ def map_data():
         {"id": 2, "name": "Jane Smith", "role": "recruiter", "location": [37.7849, -122.4094]}
     ])
 
-@app.route('/swipe_cards', methods=['GET'])
-def swipe_cards():
-    return jsonify([
-        {"id": 1, "name": "Jobseeker A", "role": "jobseeker", "skills": ["Python", "SQL"]},
-        {"id": 2, "name": "Job Posting B", "role": "recruiter", "description": "Hiring Backend Developer"}
-    ])

@@ -8,6 +8,8 @@
 </div>
 <script src="{{ url_for('static', filename='swipe.js') }}"></script>
 <script>
-    fetchCards('{{ user.role }}');
+    const role = "{{ user.role if user else 'guest' }}";
+    fetchCards(role);
 </script>
+
 {% endblock %}
