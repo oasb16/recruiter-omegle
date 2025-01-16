@@ -1,12 +1,28 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>Swipe Profiles</h1>
-<div>
+
+<!-- Role Selection Buttons -->
+<div style="margin-bottom: 20px;">
     <button id="recruiter-btn">Recruiter</button>
     <button id="jobseeker-btn">Jobseeker</button>
 </div>
 
-<div id="card-container" style="margin-top: 20px;"></div>
+<!-- Carousel Section -->
+<div id="card-container" class="carousel"></div>
+
+<!-- Like/Dislike Buttons -->
+<div style="margin-top: 20px;">
+    <button onclick="swipe('like')">👍 Like</button>
+    <button onclick="swipe('dislike')">👎 Dislike</button>
+</div>
+
+<!-- Liked and Disliked Sections -->
+<h2>Liked Profiles</h2>
+<div id="liked-container"></div>
+
+<h2>Disliked Profiles</h2>
+<div id="disliked-container"></div>
 
 <script src="{{ url_for('static', filename='swipe.js') }}"></script>
 {% endblock %}
