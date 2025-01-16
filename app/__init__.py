@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
-socketio = SocketIO(app)
+# socketio = SocketIO(app)
 
 from app import routes, video, dashboard, swiping
