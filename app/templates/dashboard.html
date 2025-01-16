@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+<div>
+    <h2>Scale Services</h2>
+    <button onclick="scaleService('video', 'start')">Start Video Service</button>
+    <button onclick="scaleService('video', 'stop')">Stop Video Service</button>
+</div>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}

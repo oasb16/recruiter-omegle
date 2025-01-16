@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Swipe Cards</h1>
+<div id="card-container"></div>
+<div>
+    <button onclick="swipe('like')">👍 Like</button>
+    <button onclick="swipe('dislike')">👎 Dislike</button>
+</div>
+<script src="{{ url_for('static', filename='swipe.js') }}"></script>
+<script>
+    fetchCards('{{ user.role }}');
+</script>
+{% endblock %}
