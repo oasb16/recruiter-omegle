@@ -1,13 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Swipe Profiles</h1>
+<h1 id="swipe-title">Swipe Profiles</h1>
+<p id="profile-counter"></p>
 
 <!-- Carousel Section -->
-<div id="card-container" class="carousel">
-    <!-- Cards will be dynamically injected here -->
+<div id="carousel-container" class="carousel-container">
+    <button id="prev-btn" class="carousel-btn">⬅</button>
+    <div id="card-container" class="carousel"></div>
+    <button id="next-btn" class="carousel-btn">➡</button>
 </div>
 
-<!-- Like/Dislike Buttons (Backup) -->
+<!-- Like/Dislike Buttons -->
 <div style="margin-top: 20px;">
     <button onclick="swipe('like')">👍 Like</button>
     <button onclick="swipe('dislike')">👎 Dislike</button>
@@ -19,6 +22,15 @@
 
 <h2>Disliked Profiles</h2>
 <div id="disliked-container"></div>
+
+<!-- Popup Modal for Details -->
+<div id="detail-modal" class="modal">
+    <div class="modal-content">
+        <span id="close-modal" class="close">&times;</span>
+        <h2 id="modal-title"></h2>
+        <p id="modal-body"></p>
+    </div>
+</div>
 
 <script src="{{ url_for('static', filename='swipe.js') }}"></script>
 {% endblock %}

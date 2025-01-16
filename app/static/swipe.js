@@ -2,133 +2,113 @@ let currentIndex = 0;
 let cards = [];
 let liked = [];
 let disliked = [];
+const profileCounter = document.getElementById('profile-counter');
 
 document.addEventListener("DOMContentLoaded", () => {
     const role = localStorage.getItem('role') || 'jobseeker';
     fetchCards(role);
+
+    // Carousel navigation buttons
+    document.getElementById('prev-btn').addEventListener('click', () => navigateCarousel(-1));
+    document.getElementById('next-btn').addEventListener('click', () => navigateCarousel(1));
+
+    // Close modal functionality
+    document.getElementById('close-modal').addEventListener('click', () => {
+        document.getElementById('detail-modal').style.display = 'none';
+    });
 });
 
 function fetchCards(role) {
-    // Reset data and sections
-    currentIndex = 0;
-    cards = [];
-    liked = [];
-    disliked = [];
-    clearLikedDislikedSections();
-
     fetch(`/swipe_cards?role=${role}`)
         .then(response => response.json())
         .then(data => {
             cards = data;
-            renderCards();
+            updateCounter();
+            renderCarousel();
         })
         .catch(error => console.error("Error fetching cards:", error));
 }
 
-function renderCards() {
+function updateCounter() {
+    const totalProfiles = cards.length;
+    profileCounter.innerText = `Total Profiles: ${totalProfiles}`;
+}
+
+function renderCarousel() {
     const cardContainer = document.getElementById('card-container');
     cardContainer.innerHTML = ""; // Clear previous cards
 
     cards.forEach((card, index) => {
-        const cardHTML = card.role === "jobseeker"
-            ? `
-                <div class="card draggable" data-index="${index}">
-                    <h3>${card.name}</h3>
-                    <p>Skills: ${card.skills.join(", ")}</p>
-                </div>
-            `
-            : `
-                <div class="card draggable" data-index="${index}">
-                    <h3>${card.title}</h3>
-                    <p>Description: ${card.description}</p>
-                </div>
-            `;
+        const cardHTML = `
+            <div class="card draggable" data-index="${index}" style="z-index: ${cards.length - index}; transform: translateX(${(index - currentIndex) * 100}%)">
+                <h3>${truncateText(card.role, 15)}</h3>
+                <p><strong>Company:</strong> ${truncateText(card.company_name, 15)}</p>
+                <p><strong>Location:</strong> ${truncateText(card.location, 15)}</p>
+                <a href="#" onclick="showDetails('${card.role}', '${card.company_name}', '${card.location}')">More Details</a>
+            </div>
+        `;
         cardContainer.innerHTML += cardHTML;
     });
 
-    addDragListeners();
+    updateDeckedCards();
 }
 
-function addDragListeners() {
-    const draggables = document.querySelectorAll('.draggable');
-    draggables.forEach(card => {
-        let startX, currentX;
+function truncateText(text, wordLimit) {
+    const words = text.split(' ');
+    return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : text;
+}
 
-        card.addEventListener('touchstart', e => {
-            startX = e.touches[0].clientX;
-        });
+function showDetails(role, company, location) {
+    const modal = document.getElementById('detail-modal');
+    document.getElementById('modal-title').innerText = `Details`;
+    document.getElementById('modal-body').innerText = `
+        Role: ${role}\n
+        Company: ${company}\n
+        Location: ${location}
+    `;
+    modal.style.display = 'block';
+}
 
-        card.addEventListener('touchmove', e => {
-            currentX = e.touches[0].clientX;
-            const diff = currentX - startX;
-            card.style.transform = `translateX(${diff}px) rotate(${diff / 10}deg)`;
-        });
+function navigateCarousel(direction) {
+    currentIndex += direction;
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= cards.length) currentIndex = cards.length - 1;
 
-        card.addEventListener('touchend', e => {
-            const diff = currentX - startX;
+    renderCarousel();
+    updateDeckedCards();
+}
 
-            // Swiped right (Like)
-            if (diff > 100) {
-                handleSwipe(card, 'like');
-            }
-            // Swiped left (Dislike)
-            else if (diff < -100) {
-                handleSwipe(card, 'dislike');
-            } else {
-                // Reset position if swipe is insufficient
-                card.style.transform = 'translateX(0px) rotate(0deg)';
-            }
-        });
+function updateDeckedCards() {
+    const allCards = document.querySelectorAll('.card');
+    allCards.forEach((card, index) => {
+        const offset = index - currentIndex;
+        card.style.transform = `translateX(${offset * 100}%) scale(${1 - Math.abs(offset) * 0.1})`;
+        card.style.opacity = Math.abs(offset) > 1 ? 0 : 1 - Math.abs(offset) * 0.5;
     });
 }
 
-function handleSwipe(card, action) {
-    const index = card.getAttribute('data-index');
-    const swipedCard = cards[index];
-
-    // Add to Liked/Disliked
-    if (action === 'like') {
-        liked.push(swipedCard);
-        updateLikedDislikedSection('liked', swipedCard);
-    } else if (action === 'dislike') {
-        disliked.push(swipedCard);
-        updateLikedDislikedSection('disliked', swipedCard);
-    }
-
-    // Remove card from carousel
-    card.remove();
-
-    // Show the next card
-    currentIndex++;
-}
-
 function swipe(action) {
-    // Backup buttons: Like/Dislike
-    const card = document.querySelector('.draggable');
-    if (!card) return;
-
-    handleSwipe(card, action);
-}
-
-function updateLikedDislikedSection(section, card) {
-    const container = document.getElementById(`${section}-container`);
-    const cardHTML = card.role === "jobseeker"
-        ? `
-            <div class="card">
-                <h3>${card.name}</h3>
-                <p>Skills: ${card.skills.join(", ")}</p>
-            </div>
-        `
-        : `
-            <div class="card">
-                <h3>${card.title}</h3>
-                <p>Description: ${card.description}</p>
-            </div>
-        `;
-    container.innerHTML += cardHTML;
-}
-
-function clearLikedDislikedSections() {
-    document.getElementById("liked-container").innerHTML = "";
-    document.getElementById("disliked-container").innerHTML = "";
+    if (currentIndex < cards.length) {
+        const card = cards[currentIndex];
+        if (action === 'like') {
+            liked.push(card);
+            document.getElementById('liked-container').innerHTML += `
+                <div class="card">
+                    <h3>${card.role}</h3>
+                    <p>${card.company_name}</p>
+                </div>
+            `;
+        } else {
+            disliked.push(card);
+            document.getElementById('disliked-container').innerHTML += `
+                <div class="card">
+                    <h3>${card.role}</h3>
+                    <p>${card.company_name}</p>
+                </div>
+            `;
+        }
+        currentIndex++;
+        renderCarousel();
+        updateCounter();
+    }
 }

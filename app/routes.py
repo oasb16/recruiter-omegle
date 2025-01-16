@@ -1,8 +1,10 @@
 from flask import request, jsonify, render_template, redirect, url_for
 from app import app, db
 from app.models import User, Match
-import subprocess
+from app.findwork_api import fetch_findwork_jobs
+import subprocess, json
 from flask_login import current_user
+
 
 # Dummy data
 dummy_jobseekers = [
@@ -47,12 +49,44 @@ def swipe():
 
 @app.route('/swipe_cards', methods=['GET'])
 def swipe_cards():
-    role = request.args.get('role')
+    role = request.args.get('role', 'jobseeker')  # Default to jobseeker
+    query = "Python Developer"  # Example query (customize as needed)
+    location = "Remote"         # Example location (customize as needed)
+    limit = 10                  # Number of jobs to fetch
+
     if role == "recruiter":
-        return jsonify(dummy_jobseekers)
+        # Fetch jobseekers (dummy data or actual integration as per earlier logic)
+        return jsonify([
+            {"id": 1, "name": "Alice", "skills": ["Python", "Flask"]},
+            {"id": 2, "name": "Bob", "skills": ["React", "Node.js"]},
+        ])
     elif role == "jobseeker":
-        return jsonify(dummy_jobs)
+        # Fetch real-time jobs from Findwork API
+        findwork_jobs = fetch_findwork_jobs(query=query, location=location, limit=limit)
+
+        # Include all required details in the response
+        jobs = [
+            {
+                "id": job["id"],
+                "role": job.get("role", "N/A"),
+                "company_name": job.get("company_name", "N/A"),
+                "company_num_employees": job.get("company_num_employees", "N/A"),
+                "employment_type": job.get("employment_type", "N/A"),
+                "location": job.get("location", "N/A"),
+                "remote": job.get("remote", False),
+                "logo": job.get("logo"),
+                "url": job.get("url"),
+                "description": job.get("text", "N/A"),
+                "date_posted": job.get("date_posted", "N/A"),
+                "keywords": job.get("keywords", []),
+                "source": job.get("source", "N/A"),
+            }
+            for job in findwork_jobs
+        ]
+        return jsonify(jobs)
+
     return jsonify({"error": "Invalid role"}), 400
+
 
 @app.route('/map_data', methods=['GET'])
 def map_data():

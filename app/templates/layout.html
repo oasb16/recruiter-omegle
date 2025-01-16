@@ -7,29 +7,37 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    
     <nav>
         <div class="navbar">
-            <h1><a href="/" class="navbar-title">Recruiter Omegle</a></h1>
+            <a href="/" class="navbar-title">Recruiter Omegle</a>
             <div class="toggle-container">
-                <label for="role-toggle">--></label>
+                <label for="role-toggle">Jobseeker</label>
                 <input type="checkbox" id="role-toggle" />
-                <label for="role-toggle">Click here if you are recruiter</label>
+                <label for="role-toggle">Recruiter</label>
+            </div>
+            <div class="toggle-container">
+                <label for="premium-toggle">Premium</label>
+                <input type="checkbox" id="premium-toggle" />
             </div>
         </div>
     </nav>
+
     <main>
         {% block content %}{% endblock %}
     </main>
-    <script>
-        // Initialize toggle state from localStorage
-        const roleToggle = document.getElementById('role-toggle');
-        roleToggle.checked = localStorage.getItem('role') === 'recruiter';
 
-        // Update role in localStorage when toggled
-        roleToggle.addEventListener('change', () => {
-            localStorage.setItem('role', roleToggle.checked ? 'recruiter' : 'jobseeker');
-            location.reload(); // Reload to apply the new role
+    <script>
+        // Initialize premium toggle state from localStorage
+        const premiumToggle = document.getElementById('premium-toggle');
+        premiumToggle.checked = localStorage.getItem('premium') === 'true';
+    
+        // Update premium state in localStorage when toggled
+        premiumToggle.addEventListener('change', () => {
+            localStorage.setItem('premium', premiumToggle.checked);
+            location.reload(); // Reload to apply the new premium state
         });
     </script>
+    
 </body>
 </html>
