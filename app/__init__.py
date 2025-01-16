@@ -7,4 +7,4 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 socketio = SocketIO(app)
 
-from app import routes, video, dashboard, aws, swiping
+from app import routes, video, dashboard, swiping
