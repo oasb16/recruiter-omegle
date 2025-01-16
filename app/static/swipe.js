@@ -4,13 +4,12 @@ let liked = [];
 let disliked = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Detect role from localStorage
     const role = localStorage.getItem('role') || 'jobseeker';
     fetchCards(role);
 });
 
 function fetchCards(role) {
-    // Reset cards and sections when fetching new data
+    // Reset data and sections
     currentIndex = 0;
     cards = [];
     liked = [];
@@ -21,53 +20,94 @@ function fetchCards(role) {
         .then(response => response.json())
         .then(data => {
             cards = data;
-            showCard();
+            renderCards();
         })
         .catch(error => console.error("Error fetching cards:", error));
 }
 
-function showCard() {
+function renderCards() {
     const cardContainer = document.getElementById('card-container');
-    cardContainer.innerHTML = ""; // Clear previous card
+    cardContainer.innerHTML = ""; // Clear previous cards
 
-    if (currentIndex < cards.length) {
-        const card = cards[currentIndex];
+    cards.forEach((card, index) => {
         const cardHTML = card.role === "jobseeker"
             ? `
-                <div class="card">
+                <div class="card draggable" data-index="${index}">
                     <h3>${card.name}</h3>
                     <p>Skills: ${card.skills.join(", ")}</p>
                 </div>
             `
             : `
-                <div class="card">
+                <div class="card draggable" data-index="${index}">
                     <h3>${card.title}</h3>
                     <p>Description: ${card.description}</p>
                 </div>
             `;
-        cardContainer.innerHTML = cardHTML;
-    } else {
-        cardContainer.innerHTML = "<p>No more profiles to swipe!</p>";
+        cardContainer.innerHTML += cardHTML;
+    });
+
+    addDragListeners();
+}
+
+function addDragListeners() {
+    const draggables = document.querySelectorAll('.draggable');
+    draggables.forEach(card => {
+        let startX, currentX;
+
+        card.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+        });
+
+        card.addEventListener('touchmove', e => {
+            currentX = e.touches[0].clientX;
+            const diff = currentX - startX;
+            card.style.transform = `translateX(${diff}px) rotate(${diff / 10}deg)`;
+        });
+
+        card.addEventListener('touchend', e => {
+            const diff = currentX - startX;
+
+            // Swiped right (Like)
+            if (diff > 100) {
+                handleSwipe(card, 'like');
+            }
+            // Swiped left (Dislike)
+            else if (diff < -100) {
+                handleSwipe(card, 'dislike');
+            } else {
+                // Reset position if swipe is insufficient
+                card.style.transform = 'translateX(0px) rotate(0deg)';
+            }
+        });
+    });
+}
+
+function handleSwipe(card, action) {
+    const index = card.getAttribute('data-index');
+    const swipedCard = cards[index];
+
+    // Add to Liked/Disliked
+    if (action === 'like') {
+        liked.push(swipedCard);
+        updateLikedDislikedSection('liked', swipedCard);
+    } else if (action === 'dislike') {
+        disliked.push(swipedCard);
+        updateLikedDislikedSection('disliked', swipedCard);
     }
+
+    // Remove card from carousel
+    card.remove();
+
+    // Show the next card
+    currentIndex++;
 }
 
 function swipe(action) {
-    if (currentIndex < cards.length) {
-        const card = cards[currentIndex];
+    // Backup buttons: Like/Dislike
+    const card = document.querySelector('.draggable');
+    if (!card) return;
 
-        // Add card to Liked or Disliked section
-        if (action === "like") {
-            liked.push(card);
-            updateLikedDislikedSection("liked", card);
-        } else if (action === "dislike") {
-            disliked.push(card);
-            updateLikedDislikedSection("disliked", card);
-        }
-
-        // Increment index and show the next card
-        currentIndex++;
-        showCard();
-    }
+    handleSwipe(card, action);
 }
 
 function updateLikedDislikedSection(section, card) {
