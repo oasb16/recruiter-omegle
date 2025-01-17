@@ -97,7 +97,7 @@ def map_data():
 import requests
 
 # Replace with your Findwork API token
-FINDWORK_API_TOKEN = "205ba42c2ec7cc34ffde1702dbd10f53eba24091"
+FINDWORK_API_TOKEN = "4bfd1629037a2acceba43c822004814a8bee8ab2"
 BASE_URL = "https://findwork.dev/api/jobs/"
 
 @app.route('/findwork_api')
