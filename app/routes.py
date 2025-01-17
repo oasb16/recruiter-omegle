@@ -1,7 +1,6 @@
 from flask import request, jsonify, render_template, redirect, url_for
 from app import app, db
 from app.models import User, Match
-from app.findwork_api import fetch_findwork_jobs
 import subprocess, json
 from flask_login import current_user
 
@@ -50,8 +49,8 @@ def swipe():
 @app.route('/swipe_cards', methods=['GET'])
 def swipe_cards():
     role = request.args.get('role', 'jobseeker')  # Default to jobseeker
-    query = "Python Developer"  # Example query (customize as needed)
-    location = "Remote"         # Example location (customize as needed)
+    query = "Analyst"  # Example query (customize as needed)
+    location = "United States"         # Example location (customize as needed)
     limit = 10                  # Number of jobs to fetch
 
     if role == "recruiter":
@@ -94,3 +93,62 @@ def map_data():
         {"id": 1, "name": "John Doe", "role": "jobseeker", "location": [37.7749, -122.4194]},
         {"id": 2, "name": "Jane Smith", "role": "recruiter", "location": [37.7849, -122.4094]}
     ])
+
+import requests
+
+# Replace with your Findwork API token
+FINDWORK_API_TOKEN = "205ba42c2ec7cc34ffde1702dbd10f53eba24091"
+BASE_URL = "https://findwork.dev/api/jobs/"
+
+@app.route('/findwork_api')
+def fetch_findwork_jobs(query="", location="", sort_by="relevance", limit=10):
+    """
+    Fetch jobs from Findwork API based on the provided parameters.
+    :param query: Search query (e.g., "Python Developer").
+    :param location: Job location (optional).
+    :param sort_by: Sort order ("relevance", "date").
+    :param limit: Number of results to fetch.
+    :return: List of job postings.
+    """
+    headers = {"Authorization": f"Token {FINDWORK_API_TOKEN}"}
+    params = {
+        "search": query,
+        "location": location,
+        "sort_by": sort_by,
+        "limit": limit,
+    }
+
+    try:
+        response = requests.get(BASE_URL, headers=headers, params=params)
+        response.raise_for_status()
+        return response.json().get("results", [])
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching Findwork jobs: {e}")
+        return []
+
+# Cache for Findwork API responses
+findwork_cache = []
+
+@app.route('/findwork_api_cache', methods=['GET'])
+def findwork_api():
+    global findwork_cache
+
+    # Check if cache exists
+    if findwork_cache:
+        print("Serving data from cache.")
+        return jsonify(findwork_cache)
+
+    # Fetch data from Findwork API (replace with your real API URL and headers)
+    url = "https://findwork.dev/api/jobs/"  # Replace with the actual API endpoint
+    headers = {"Authorization": "Bearer YOUR_API_KEY"}  # Replace with your API key
+
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        return jsonify({"error": "Failed to fetch data from Findwork API"}), 500
+
+    jobs = response.json()["results"]  # Adjust based on API response structure
+    findwork_cache = jobs[:100]  # Cache the first 100 responses
+
+    return jsonify(findwork_cache)
+
+

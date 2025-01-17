@@ -1,7 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1 id="swipe-title">Swipe Profiles</h1>
-<p id="profile-counter"></p>
+<p id="profile-counter"></p> <!-- Dynamic Counter -->
+<p id="dynamic-data" style="font-size: 1.2rem; color: #555;"></p> <!-- Dynamic Data -->
+<!-- Recruiter Toggle -->
+<div>
+    <label for="recruiter-toggle">Recruiter</label>
+    <input type="checkbox" id="recruiter-toggle">
+</div>
+
+<!-- Refresh Button -->
+<button id="refresh-btn" style="margin-top: 10px; padding: 10px 15px; font-size: 1rem;">🔄 Refresh</button>
+
+<!-- Popup Modal for More Details -->
+<div id="detail-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span id="close-modal" class="close">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
 
 <!-- Carousel Section -->
 <div id="carousel-container" class="carousel-container">
@@ -12,25 +31,17 @@
 
 <!-- Like/Dislike Buttons -->
 <div style="margin-top: 20px;">
-    <button onclick="swipe('like')">👍 Like</button>
-    <button onclick="swipe('dislike')">👎 Dislike</button>
+    <button onclick="swipeCard('like')">👍 Like</button>
+    <button onclick="swipeCard('dislike')">👎 Dislike</button>
 </div>
 
 <!-- Liked and Disliked Sections -->
-<h2>Liked Profiles</h2>
+<h2 id="liked-header" style="cursor: pointer;">Liked Profiles (Click to Expand/Collapse)</h2>
 <div id="liked-container"></div>
 
-<h2>Disliked Profiles</h2>
+<h2 id="disliked-header" style="cursor: pointer;">Disliked Profiles (Click to Expand/Collapse)</h2>
 <div id="disliked-container"></div>
 
-<!-- Popup Modal for Details -->
-<div id="detail-modal" class="modal">
-    <div class="modal-content">
-        <span id="close-modal" class="close">&times;</span>
-        <h2 id="modal-title"></h2>
-        <p id="modal-body"></p>
-    </div>
-</div>
 
 <script src="{{ url_for('static', filename='swipe.js') }}"></script>
 {% endblock %}
