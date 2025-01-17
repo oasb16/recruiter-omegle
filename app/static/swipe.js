@@ -42,7 +42,7 @@ function fetchCards(role) {
             .then((response) => response.json())
             .then((data) => {
                 // Exclude liked and disliked jobs
-                console.log(response)
+                console.log(data)
                 cards = data.filter(
                     (job) => !liked.some((likedJob) => likedJob.id === job.id) &&
                              !disliked.some((dislikedJob) => dislikedJob.id === job.id)
