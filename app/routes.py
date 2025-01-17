@@ -119,6 +119,7 @@ def fetch_findwork_jobs(query="", location="", sort_by="relevance", limit=10):
     }
 
     try:
+        print("Trying to get cards")
         response = requests.get(BASE_URL, headers=headers, params=params)
         response.raise_for_status()
         print(response.json().get("results", []))
