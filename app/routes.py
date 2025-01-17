@@ -121,6 +121,7 @@ def fetch_findwork_jobs(query="", location="", sort_by="relevance", limit=10):
     try:
         response = requests.get(BASE_URL, headers=headers, params=params)
         response.raise_for_status()
+        print(response.json().get("results", []))
         return response.json().get("results", [])
     except requests.exceptions.RequestException as e:
         print(f"Error fetching Findwork jobs: {e}")
