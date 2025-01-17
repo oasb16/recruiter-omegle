@@ -49,7 +49,7 @@ def swipe():
 @app.route('/swipe_cards', methods=['GET'])
 def swipe_cards():
     role = request.args.get('role', 'jobseeker')  # Default to jobseeker
-    query = "Analyst"  # Example query (customize as needed)
+    query = "Python Developer"  # Example query (customize as needed)
     location = "United States"         # Example location (customize as needed)
     limit = 10                  # Number of jobs to fetch
 
